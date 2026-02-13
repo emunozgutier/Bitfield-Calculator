@@ -69,6 +69,11 @@ const BitDisplay = () => {
                         onMouseDown={() => handleMouseDown(bitIndex)}
                         onMouseEnter={() => handleMouseEnter(bitIndex)}
                         onMouseUp={handleMouseUp}
+                        onClick={() => {
+                            if (selection.start === selection.end) {
+                                toggleBit(bitIndex);
+                            }
+                        }}
                         title={`Bit ${bitIndex}`}
                     >
                         <div className="bit-index">{bitIndex}</div>
