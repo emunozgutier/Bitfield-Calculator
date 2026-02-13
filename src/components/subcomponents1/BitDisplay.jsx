@@ -44,50 +44,59 @@ const BitDisplay = () => {
     // Or grid with specific gaps.
 
     const renderBits = () => {
-        const groups = [];
+        const rows = [];
         // bitWidth from store
 
+        for (let rowBase = bitWidth - 1; rowBase >= 0; rowBase -= 16) {
+            const rowGroups = [];
+            for (let i = rowBase; i > rowBase - 16; i -= 4) {
+                if (i < 0) break;
 
-        for (let i = bitWidth - 1; i >= 0; i -= 4) {
-            const groupBits = [];
-            for (let j = 0; j < 4; j++) {
-                const bitIndex = i - j;
-                if (bitIndex < 0) break;
+                const groupBits = [];
+                for (let j = 0; j < 4; j++) {
+                    const bitIndex = i - j;
+                    if (bitIndex < 0) break;
 
-                const isSet = (value & (1n << BigInt(bitIndex))) !== 0n;
-                let isSelected = false;
-                if (selection.start !== null && selection.end !== null) {
-                    const high = Math.max(selection.start, selection.end);
-                    const low = Math.min(selection.start, selection.end);
-                    isSelected = bitIndex >= low && bitIndex <= high;
+                    const isSet = (value & (1n << BigInt(bitIndex))) !== 0n;
+                    let isSelected = false;
+                    if (selection.start !== null && selection.end !== null) {
+                        const high = Math.max(selection.start, selection.end);
+                        const low = Math.min(selection.start, selection.end);
+                        isSelected = bitIndex >= low && bitIndex <= high;
+                    }
+
+                    groupBits.push(
+                        <div
+                            key={bitIndex}
+                            className={`bit ${isSet ? 'on' : 'off'} ${isSelected ? 'selected' : ''}`}
+                            onMouseDown={() => handleMouseDown(bitIndex)}
+                            onMouseEnter={() => handleMouseEnter(bitIndex)}
+                            onMouseUp={handleMouseUp}
+                            onClick={() => {
+                                if (selection.start === selection.end) {
+                                    toggleBit(bitIndex);
+                                }
+                            }}
+                            title={`Bit ${bitIndex}`}
+                        >
+                            <div className="bit-index">{bitIndex}</div>
+                            <div className="bit-value">{isSet ? 1 : 0}</div>
+                        </div>
+                    );
                 }
-
-                groupBits.push(
-                    <div
-                        key={bitIndex}
-                        className={`bit ${isSet ? 'on' : 'off'} ${isSelected ? 'selected' : ''}`}
-                        onMouseDown={() => handleMouseDown(bitIndex)}
-                        onMouseEnter={() => handleMouseEnter(bitIndex)}
-                        onMouseUp={handleMouseUp}
-                        onClick={() => {
-                            if (selection.start === selection.end) {
-                                toggleBit(bitIndex);
-                            }
-                        }}
-                        title={`Bit ${bitIndex}`}
-                    >
-                        <div className="bit-index">{bitIndex}</div>
-                        <div className="bit-value">{isSet ? 1 : 0}</div>
+                rowGroups.push(
+                    <div key={`group-${i}`} className="bit-group">
+                        {groupBits}
                     </div>
                 );
             }
-            groups.push(
-                <div key={`group-${i}`} className="bit-group">
-                    {groupBits}
+            rows.push(
+                <div key={`row-${rowBase}`} className="bit-row">
+                    {rowGroups}
                 </div>
             );
         }
-        return groups;
+        return rows;
     };
 
     return (

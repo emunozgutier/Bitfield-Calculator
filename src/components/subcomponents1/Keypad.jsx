@@ -5,61 +5,37 @@ import './Keypad.css';
 const Keypad = () => {
     const { selection, setValue, value } = useBitfieldStore();
     const [input, setInput] = useState('');
+    const [inputMode, setInputMode] = useState('HEX'); // 'HEX' or 'DEC'
 
-    // Define executeCommand first or inside useCallback?
-    // It depends on state.
+    const parseInput = (valStr, mode) => {
+        try {
+            if (valStr.startsWith('0d')) return BigInt(valStr.substring(2));
+            if (valStr.startsWith('0x')) return BigInt(valStr);
+            if (valStr.startsWith('0b')) return BigInt(valStr); // Support binary just in case
+
+            if (mode === 'DEC') {
+                return BigInt(valStr);
+            } else {
+                // HEX mode default
+                return BigInt('0x' + valStr);
+            }
+        } catch (e) {
+            return null;
+        }
+    };
 
     const executeCommand = useCallback(() => {
         if (!input) return;
 
-        let val = 0n;
-        let valStr = input.toLowerCase();
+        let val = parseInput(input.toLowerCase(), inputMode);
 
-        try {
-            if (valStr.startsWith('0d')) {
-                val = BigInt(valStr.substring(2));
-            } else if (valStr.startsWith('0x')) {
-                val = BigInt(valStr);
-            } else {
-                // Default to hex if valid, else dec? Or just assuming hex for a programmer calc?
-                // User said "0d9" specifically. So maybe default is Hex?
-                // Let's assume Hex if it has A-F, otherwise ambiguous...
-                // Actually, standard is usually: 0x for hex, 0b for binary, otherwise decimal.
-                // But in many programmer calcs, you are in "Hex mode" or "Dec mode".
-                // Let's try to parse as Hex if it matches hex range, but standard BigInt constructor handles 0x.
-                // If I just type "F", BigInt("F") throws. BigInt("0xF") works.
-                // So if it's just hex digits, I should probably prepend 0x if I assume hex.
-                // But the user said "0d9". So they are explicit.
-                // If they type just "9", is it dec or hex? 9 is same in both.
-                // If they type "10", is it ten or sixteen?
-                // Let's support explicit prefixes '0d', '0x', '0b'.
-                // If no prefix, let's treat as Hex if it contains A-F, else...
-                // Let's just treat standard BigInt parsing.
-                // If the user types "FF", `BigInt("FF")` fails.
-                // Let's check if it's valid hex and prepend 0x?
-
-                if (/^[0-9]+$/.test(valStr)) {
-                    val = BigInt(valStr); // Treat as decimal by default if all digits?
-                    // Or maybe the user wants hex default.
-                    // Let's stick to explicit prefixes for now or simple decimal default.
-                    // Actually, usually programmer calcs default to the current view mode.
-                    // I'll stick to: must use 0x for hex, 0d for dec, or just numbers for dec.
-                } else {
-                    // Try adding 0x
-                    val = BigInt('0x' + valStr);
-                }
-            }
-
-            // Always set whole value as per request
+        if (val !== null) {
             setValue(val);
             setInput('');
-
-        } catch (e) {
-            console.error("Invalid input", e);
-            // Shake effect or error state?
-            // For now just ignore
+        } else {
+            console.error("Invalid input");
         }
-    }, [input, setValue]);
+    }, [input, inputMode, setValue]);
 
     const handlePress = useCallback((key) => {
         if (key === 'CLEAR') {
@@ -68,66 +44,137 @@ const Keypad = () => {
             setInput(prev => prev.slice(0, -1));
         } else if (key === 'ENTER') {
             executeCommand();
+        } else if (key === 'HEX') {
+            setInputMode('HEX');
+            setInput('');
+        } else if (key === 'DEC') {
+            setInputMode('DEC');
+            setInput('');
         } else {
             setInput(prev => prev + key);
         }
-    }, [executeCommand]); // executeCommand changes when input changes, so this is fine.
+    }, [executeCommand]);
 
     // Keyboard support
     useEffect(() => {
         const handleKeyDown = (e) => {
             const key = e.key.toUpperCase();
-            if (/[0-9A-F]/.test(key) && key.length === 1) {
+            if (/[0-9]/.test(key)) {
                 setInput(prev => prev + key);
+            } else if (/[A-F]/.test(key)) {
+                if (inputMode === 'HEX') {
+                    setInput(prev => prev + key);
+                }
             } else if (key === 'ENTER') {
                 handlePress('ENTER');
             } else if (key === 'BACKSPACE') {
                 handlePress('BACK');
             } else if (key === 'X') {
-                setInput(prev => prev + 'x'); // Allow typing 0x
+                if (inputMode === 'HEX') setInput(prev => prev + 'x');
             } else if (key === 'D') {
-                setInput(prev => prev + 'd'); // Allow typing 0d
+                setInput(prev => prev + 'd');
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [handlePress]);
-    // Actually handlePress depends on state if I called it directly, but I'm setting state.
-    // executeCommand depends on state 'input' and 'selection'.
-    // So the effect needs to access current input.
-    // The easiest way is to use a ref or just let the effect depend on input.
+    }, [handlePress, inputMode]);
 
-    // Correction: handlePress calls executeCommand which uses 'input'. 
-    // If I bind handleKeyDown, it closes over 'input'.
-    // So I need 'input' in dependency array.
+    const getDisplayValues = () => {
+        // If user is typing, show input in main line, and parsed value in other?
+        // Or just show input.
+        // User said: "on the calculator dispaly it should show hex in one line and decimal in the other."
+        // If input is empty, show current value in both.
+        // If input is active, show input and ... ?
 
-    // Better: split the key handler to not rely on closure for 'input' state setter, 
-    // but ENTER needs current input.
-    // I will rewrite this to use a ref for input or just clean dependencies.
-
-    const getDisplayValue = () => {
-        if (input) return input;
-        // Default display: show current value in Hex
-        // Or should we show Decimal?
-        // User asked: "make sure if you change the bitfield the calculator value is updated"
-        // Showing 0x... is standard programmer calc behavior.
-        return '0x' + value.toString(16).toUpperCase();
+        if (input) {
+            // Show input being typed
+            return {
+                primary: input,
+                secondary: '...', // Or try to preview parse?
+                primaryLabel: inputMode
+            };
+        } else {
+            return {
+                primary: '0x' + value.toString(16).toUpperCase(),
+                secondary: value.toString(10),
+                primaryLabel: 'HEX',
+                secondaryLabel: 'DEC'
+            };
+        }
     };
+
+    const display = getDisplayValues();
 
     return (
         <div className="keypad-container">
-            <div className="input-display">{getDisplayValue()}</div>
+            <div className="display-area">
+                <div className="display-line primary">
+                    <span className="label">{display.primaryLabel}</span>
+                    <span className="value">{display.primary}</span>
+                </div>
+                {/* Only show secondary if not typing or we want to show preview? 
+                     User request: "show hex in one line and decimal in the other" implies always.
+                     But if typing 'A', we don't know dec yet unless we parse on fly. 
+                     For now let's just show current value in secondary if input is empty.
+                     If input is present, maybe hide secondary or show 'Typing...'
+                 */}
+                {!input && (
+                    <div className="display-line secondary">
+                        <span className="label">{display.secondaryLabel}</span>
+                        <span className="value">{display.secondary}</span>
+                    </div>
+                )}
+            </div>
+
             <div className="keys-grid">
-                {['D', 'E', 'F', 'CLEAR'].map(k => <button key={k} onClick={() => handlePress(k)}>{k}</button>)}
-                {['A', 'B', 'C', 'BACK'].map(k => <button key={k} onClick={() => handlePress(k)}>{k}</button>)}
-                {['7', '8', '9', '0d'].map(k => <button key={k} onClick={() => handlePress(k)}>{k}</button>)}
-                {['4', '5', '6', '0x'].map(k => <button key={k} onClick={() => handlePress(k)}>{k}</button>)}
-                {['1', '2', '3', 'ENTER'].map(k => <button key={k} className={k === 'ENTER' ? 'enter-key' : ''} onClick={() => handlePress(k)}>{k}</button>)}
-                {['0', '', '', ''].map((k, i) => k ? <button key={k} className="zero-key" onClick={() => handlePress(k)}>{k}</button> : <div key={i}></div>)}
+                <button
+                    className={`mode-btn ${inputMode === 'HEX' ? 'active' : ''}`}
+                    onClick={() => handlePress('HEX')}
+                >
+                    HEX
+                </button>
+                <button
+                    className={`mode-btn ${inputMode === 'DEC' ? 'active' : ''}`}
+                    onClick={() => handlePress('DEC')}
+                >
+                    DEC
+                </button>
+                <button onClick={() => handlePress('CLEAR')}>CLEAR</button>
+                <button onClick={() => handlePress('BACK')}>BACK</button>
+
+                {['D', 'E', 'F'].map(k => (
+                    <button
+                        key={k}
+                        onClick={() => handlePress(k)}
+                        disabled={inputMode === 'DEC'}
+                        className={inputMode === 'DEC' ? 'btn-disabled' : ''}
+                    >
+                        {k}
+                    </button>
+                ))}
+                <button onClick={() => handlePress('0d')}>0d</button>
+
+                {['A', 'B', 'C'].map(k => (
+                    <button
+                        key={k}
+                        onClick={() => handlePress(k)}
+                        disabled={inputMode === 'DEC'}
+                        className={inputMode === 'DEC' ? 'btn-disabled' : ''}
+                    >
+                        {k}
+                    </button>
+                ))}
+                <button onClick={() => handlePress('0x')}>0x</button>
+
+                {['7', '8', '9', '4', '5', '6', '1', '2', '3', '0'].map(k => (
+                    <button key={k} onClick={() => handlePress(k)}>{k}</button>
+                ))}
+
+                <button className="enter-key" onClick={() => handlePress('ENTER')}>ENTER</button>
             </div>
             <div className="help-text">
-                Tip: Select bits above, then type value (e.g., "0d9", "0xFF", "12") and pressing ENTER.
+                Mode: {inputMode}. Type value and press ENTER.
             </div>
         </div>
     );

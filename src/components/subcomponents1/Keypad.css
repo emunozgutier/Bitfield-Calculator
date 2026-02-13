@@ -9,34 +9,59 @@
     flex-direction: column;
 }
 
-.input-display {
+.display-area {
     background: #000;
-    color: #fff;
-    padding: 8px;
-    font-size: 1.1em;
-    text-align: right;
-    border: 1px solid #333;
+    border: 1px solid #444;
     border-radius: 4px;
-    margin-bottom: 8px;
-    min-height: 1.2em;
-    font-family: monospace;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 60px;
+}
+
+.display-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 1.5;
+}
+
+.display-line.primary {
+    font-size: 1.2rem;
+    color: #00ff00;
+}
+
+.display-line.secondary {
+    font-size: 1rem;
+    color: #888;
+}
+
+.display-line .label {
+    font-size: 0.8rem;
+    color: #555;
+    margin-right: 10px;
 }
 
 .keys-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
+    gap: 8px;
+    flex: 1;
 }
 
 .keys-grid button {
-    padding: 8px;
-    font-size: 0.9rem;
-    border-radius: 6px;
     background: #333;
-    color: #eee;
-    border: none;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 4px;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.1s;
+    padding: 12px;
 }
 
 .keys-grid button:hover {
@@ -45,33 +70,6 @@
 
 .keys-grid button:active {
     background: #555;
-    transform: translateY(1px);
-}
-
-.keys-grid .enter-key {
-    background: #2e7d32;
-    grid-row: span 2;
-    height: 100%;
-}
-
-/* Adjust grid for Enter key spanning? 
-   The grid is auto-flow row. If I want Enter to span, I need to place it carefully.
-   My current map structure:
-   Row 1: D E F CLEAR
-   Row 2: A B C BACK
-   Row 3: 7 8 9 0d
-   Row 4: 4 5 6 0x
-   Row 5: 1 2 3 ENTER
-   Row 6: 0 . . .
-   
-   If ENTER is in Row 5, and I want it to span, it would go into Row 6.
-   Let's just keep it simple for now, generic grid.
-*/
-.keys-grid .enter-key {
-    background: #2e7d32;
-}
-
-.keys-grid .enter-key:hover {
     background: #388e3c;
 }
 
