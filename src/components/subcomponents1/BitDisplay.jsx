@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useBitfield } from '../../context/BitContext';
+import { useBitfieldStore } from '../../store/useBitfieldStore';
 import './BitDisplay.css';
 
 const BitDisplay = () => {
-    const { value, toggleBit, selection, setSelection } = useBitfield();
+    const { value, toggleBit, selection, setSelection, bitWidth } = useBitfieldStore();
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState(null);
 
@@ -45,8 +45,8 @@ const BitDisplay = () => {
 
     const renderBits = () => {
         const groups = [];
-        // bitWidth from context?
-        const { bitWidth = 64 } = useBitfield();
+        // bitWidth from store
+
 
         for (let i = bitWidth - 1; i >= 0; i -= 4) {
             const groupBits = [];

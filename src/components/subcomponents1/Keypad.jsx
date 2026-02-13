@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useBitfield } from '../../context/BitContext';
+import { useBitfieldStore } from '../../store/useBitfieldStore';
 import './Keypad.css';
 
 const Keypad = () => {
-    const { selection, setValue, value } = useBitfield();
+    const { selection, setValue, value } = useBitfieldStore();
     const [input, setInput] = useState('');
 
     // Define executeCommand first or inside useCallback?

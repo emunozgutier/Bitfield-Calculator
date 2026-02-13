@@ -1,27 +1,8 @@
-import { useState } from 'react';
-import { useBitfield } from '../../context/BitContext';
+import { useBitfieldStore } from '../../store/useBitfieldStore';
 import './CreatedBitfields.css';
 
 const CreatedBitfields = () => {
-    const { savedFields, addSavedField, removeSavedField, selection, value } = useBitfield();
-    const [fieldName, setFieldName] = useState('');
-
-    const handleSave = () => {
-        try {
-            if (selection.start !== null && selection.end !== null) {
-                const high = Math.max(selection.start, selection.end);
-                const low = Math.min(selection.start, selection.end);
-                const name = fieldName.trim() || `Field [${high}:${low}]`;
-
-                addSavedField(name, selection.start, selection.end);
-                setFieldName('');
-            }
-        } catch (error) {
-            console.error("Failed to save field:", error);
-        }
-    };
-
-    const isSelectionActive = selection.start !== null && selection.end !== null;
+    const { savedFields, removeSavedField, value } = useBitfieldStore();
 
     const getFieldValue = (start, end) => {
         try {
@@ -43,27 +24,6 @@ const CreatedBitfields = () => {
     return (
         <div className="created-bitfields-container">
             <h3>Created Bitfields</h3>
-
-            <div className="add-field-form">
-                <input
-                    type="text"
-                    placeholder="Field Name"
-                    value={fieldName}
-                    onChange={(e) => setFieldName(e.target.value)}
-                />
-                <button
-                    onClick={handleSave}
-                    disabled={!isSelectionActive}
-                    className={isSelectionActive ? 'btn-highlight' : ''}
-                >
-                    Add Current Selection
-                </button>
-                {selection.start !== null && (
-                    <div className="selection-preview">
-                        Selection: [{Math.max(selection.start, selection.end)}:{Math.min(selection.start, selection.end)}]
-                    </div>
-                )}
-            </div>
 
             <div className="fields-list">
                 {savedFields.length === 0 ? (

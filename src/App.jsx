@@ -1,29 +1,21 @@
 
-import { BitfieldProvider } from './context/BitContext';
 import Calculator from './components/Calculator';
 import Notes from './components/Notes';
 import './App.css';
 
 function App() {
   return (
-    <div className="container-fluid h-100 d-flex flex-column p-0">
-      <header className="row flex-shrink-0 bg-dark text-white p-3 m-0 border-bottom border-secondary">
-        <div className="col">
-          <h1 className="h3 m-0">Bitfield Calculator</h1>
+    <div className="container-fluid vh-100 p-3 bg-dark text-white overflow-hidden">
+      <div className="row h-100 g-3">
+        <div className="col-md-6 col-lg-5 h-100 overflow-hidden">
+          <Calculator />
         </div>
-      </header>
-      <BitfieldProvider>
-        <div className="row flex-grow-1 m-0 overflow-hidden">
-          <div className="col-md-6 col-lg-5 p-3 d-flex flex-column border-end border-secondary bg-dark h-100 overflow-hidden">
-            <Calculator />
-          </div>
-          <div className="col-md-6 col-lg-7 p-3 h-100 overflow-auto bg-dark">
-            <Notes />
-          </div>
+        <div className="col-md-6 col-lg-7 h-100 overflow-hidden">
+          <Notes />
         </div>
-      </BitfieldProvider>
+      </div>
     </div>
-  )
+  );
 }
 
 export default App
