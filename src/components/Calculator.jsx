@@ -27,26 +27,10 @@ const Calculator = () => {
     return (
         <div className="calculator-container">
             <BitDisplay />
-            <div className="controls-area">
-                <div className="value-display-section">
-                    <div className="value-group main-value">
-                        <label>Full Value (64-bit)</label>
-                        <div className="display-box hex">{formatHex(value)}</div>
-                        <div className="display-box dec">{formatDec(value)}</div>
-                    </div>
 
-                    {selectedValue !== null && (
-                        <div className="value-group selection-value">
-                            <label>Selection {rangeText}</label>
-                            <div className="display-box hex">{formatHex(selectedValue)}</div>
-                            <div className="display-box dec">{formatDec(selectedValue)}</div>
-                        </div>
-                    )}
-                </div>
-                <Keypad />
-            </div>
+            <Keypad />
         </div>
     );
-};
+}
 
 export default Calculator;
