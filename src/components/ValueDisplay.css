@@ -1,0 +1,39 @@
+.value-display {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.value-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.value-group label {
+    font-size: 0.8em;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.display-box {
+    background: #000;
+    color: #0f0;
+    /* Retro terminal green */
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 1.2em;
+    text-align: right;
+    border: 1px solid #333;
+}
+
+.selection-value .display-box {
+    color: #ffd700;
+    /* Gold for selection */
+}

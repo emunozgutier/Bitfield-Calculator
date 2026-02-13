@@ -1,0 +1,65 @@
+.bit-display-container {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    /* 16 bits per row -> 4 rows for 64 bits */
+    gap: 4px;
+    padding: 20px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    user-select: none;
+    margin-bottom: 20px;
+}
+
+.bit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    background: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    border: 1px solid transparent;
+}
+
+.bit:hover {
+    background: #444;
+}
+
+.bit.on {
+    background: #2e7d32;
+    /* Green for ON */
+    color: white;
+    text-shadow: 0 0 5px rgba(46, 125, 50, 0.8);
+}
+
+.bit.selected {
+    border-color: #ffd700;
+    /* Gold highlight */
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    background: #555;
+}
+
+.bit.on.selected {
+    background: #388e3c;
+    border-color: #ffd700;
+}
+
+.bit-index {
+    font-size: 0.7em;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.bit-value {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+@media (max-width: 800px) {
+    .bit-display-container {
+        grid-template-columns: repeat(8, 1fr);
+        /* 8 bits per row on smaller screens */
+    }
+}
