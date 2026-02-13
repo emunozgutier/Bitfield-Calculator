@@ -1,6 +1,6 @@
 .keypad-container {
     background: #1e1e1e;
-    padding: 20px;
+    padding: 8px;
     border-radius: 8px;
     max-width: 400px;
     margin: 0 auto;
@@ -9,25 +9,25 @@
 .input-display {
     background: #000;
     color: #fff;
-    padding: 15px;
-    font-size: 1.5em;
+    padding: 8px;
+    font-size: 1.1em;
     text-align: right;
     border: 1px solid #333;
     border-radius: 4px;
-    margin-bottom: 20px;
-    min-height: 1.5em;
+    margin-bottom: 8px;
+    min-height: 1.2em;
     font-family: monospace;
 }
 
 .keys-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 4px;
 }
 
 .keys-grid button {
-    padding: 15px;
-    font-size: 1.2em;
+    padding: 8px;
+    font-size: 0.9rem;
     border-radius: 6px;
     background: #333;
     color: #eee;

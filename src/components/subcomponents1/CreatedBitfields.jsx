@@ -7,22 +7,19 @@ const CreatedBitfields = () => {
     const [fieldName, setFieldName] = useState('');
 
     const handleSave = () => {
-        if (fieldName && selection.start !== null && selection.end !== null) {
-            addSavedField(fieldName, selection.start, selection.end);
+        if (selection.start !== null && selection.end !== null) {
+            const high = Math.max(selection.start, selection.end);
+            const low = Math.min(selection.start, selection.end);
+            const name = fieldName.trim() || `Field [${high}:${low}]`;
+
+            addSavedField(name, selection.start, selection.end);
             setFieldName('');
         }
     };
 
-    const getFieldValue = (start, end) => {
-        const high = Math.max(start, end);
-        const low = Math.min(start, end);
-        const mask = (1n << BigInt(high - low + 1)) - 1n;
-        const shifedValue = (value >> BigInt(low)) & mask;
-        return {
-            hex: '0x' + shifedValue.toString(16).toUpperCase(),
-            dec: shifedValue.toString(10)
-        };
-    };
+    const isSelectionActive = selection.start !== null && selection.end !== null;
+
+    // ... getFieldValue ...
 
     return (
         <div className="created-bitfields-container">
@@ -37,7 +34,8 @@ const CreatedBitfields = () => {
                 />
                 <button
                     onClick={handleSave}
-                    disabled={!fieldName || selection.start === null}
+                    disabled={!isSelectionActive}
+                    className={isSelectionActive ? 'btn-highlight' : ''}
                 >
                     Add Current Selection
                 </button>

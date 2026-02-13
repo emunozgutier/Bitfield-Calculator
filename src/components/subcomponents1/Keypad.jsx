@@ -3,7 +3,7 @@ import { useBitfield } from '../../context/BitContext';
 import './Keypad.css';
 
 const Keypad = () => {
-    const { selection, setValue } = useBitfield();
+    const { selection, setValue, value } = useBitfield();
     const [input, setInput] = useState('');
 
     // Define executeCommand first or inside useCallback?
@@ -106,9 +106,18 @@ const Keypad = () => {
     // but ENTER needs current input.
     // I will rewrite this to use a ref for input or just clean dependencies.
 
+    const getDisplayValue = () => {
+        if (input) return input;
+        // Default display: show current value in Hex
+        // Or should we show Decimal?
+        // User asked: "make sure if you change the bitfield the calculator value is updated"
+        // Showing 0x... is standard programmer calc behavior.
+        return '0x' + value.toString(16).toUpperCase();
+    };
+
     return (
         <div className="keypad-container">
-            <div className="input-display">{input || 'Ready...'}</div>
+            <div className="input-display">{getDisplayValue()}</div>
             <div className="keys-grid">
                 {['D', 'E', 'F', 'CLEAR'].map(k => <button key={k} onClick={() => handlePress(k)}>{k}</button>)}
                 {['A', 'B', 'C', 'BACK'].map(k => <button key={k} onClick={() => handlePress(k)}>{k}</button>)}

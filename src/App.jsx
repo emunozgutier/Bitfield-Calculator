@@ -14,7 +14,7 @@ function App() {
       </header>
       <BitfieldProvider>
         <div className="row flex-grow-1 m-0 overflow-hidden">
-          <div className="col-md-6 col-lg-5 p-3 d-flex flex-column border-end border-secondary bg-dark">
+          <div className="col-md-6 col-lg-5 p-3 d-flex flex-column border-end border-secondary bg-dark h-100 overflow-hidden">
             <Calculator />
           </div>
           <div className="col-md-6 col-lg-7 p-3 h-100 overflow-auto bg-dark">

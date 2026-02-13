@@ -27,9 +27,9 @@ const Calculator = () => {
     const { bitWidth, setBitWidth } = useBitfield();
 
     return (
-        <div className="d-flex flex-column gap-3 h-100">
-            <div className="card bg-secondary text-white border-0 shadow-sm flex-shrink-0">
-                <div className="card-header border-bottom border-dark d-flex justify-content-between align-items-center">
+        <div className="d-flex flex-column gap-3 h-100 overflow-hidden">
+            <div className="card bg-secondary text-white border-0 shadow-sm flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
+                <div className="card-header border-bottom border-dark d-flex justify-content-between align-items-center flex-shrink-0">
                     <span className="fw-bold">Bit Display</span>
                     <div className="btn-group btn-group-sm">
                         {[64, 32, 16].map(width => (
@@ -43,13 +43,13 @@ const Calculator = () => {
                         ))}
                     </div>
                 </div>
-                <div className="card-body p-3">
+                <div className="card-body p-2 overflow-auto">
                     <BitDisplay />
                 </div>
             </div>
 
-            <div className="card bg-secondary text-white border-0 shadow-sm flex-grow-1 overflow-hidden">
-                <div className="card-body p-3 h-100 d-flex flex-column">
+            <div className="card bg-secondary text-white border-0 shadow-sm flex-shrink-0">
+                <div className="card-body p-2">
                     <Keypad />
                 </div>
             </div>

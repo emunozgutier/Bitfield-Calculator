@@ -49,6 +49,18 @@
     color: #aaa;
 }
 
+.add-field-form button.btn-highlight {
+    background-color: #28a745;
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+.add-field-form button.btn-highlight:hover {
+    background-color: #218838;
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.8);
+}
+
 .selection-preview {
     font-size: 0.8rem;
     color: #aaa;

@@ -3,7 +3,7 @@ import { useBitfield } from '../../context/BitContext';
 import './BitDisplay.css';
 
 const BitDisplay = () => {
-    const { value, toggleBit, selection, setSelection, addSavedField } = useBitfield();
+    const { value, toggleBit, selection, setSelection } = useBitfield();
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState(null);
 
@@ -37,19 +37,6 @@ const BitDisplay = () => {
             toggleBit(index);
         }
     }
-
-    const handleAddBitfield = () => {
-        if (selection.start !== null && selection.end !== null) {
-            // Check if already exists? For now just add.
-            // Maybe prompt for name?
-            const name = `Field ${selection.start}-${selection.end}`;
-            // We can iterate to find if there is a saved field with same range...
-            // But context handles uniqueness by ID.
-            // Let's just add it.
-            // Ideally we'd ask for a name, but for now specific requirement is "Add this bitfield" tooltip/action.
-            // We can make the tooltip clickable or have a button in it.
-        }
-    };
 
     // We need to group bits by 4.
     // And render them.
@@ -98,29 +85,11 @@ const BitDisplay = () => {
         return groups;
     };
 
-    const handleAddClick = (e) => {
-        e.stopPropagation();
-        if (selection.start !== null && selection.end !== null) {
-            const high = Math.max(selection.start, selection.end);
-            const low = Math.min(selection.start, selection.end);
-            addSavedField(`Field ${high}:${low}`, high, low);
-            // Clear selection? Maybe not.
-            setSelection({ start: null, end: null });
-        }
-    };
-
-    const showTooltip = selection.start !== null && selection.end !== null && !isDragging;
-
     return (
         <div className="bit-display-wrapper" onMouseLeave={handleMouseUp}>
             <div className="bit-display-container">
                 {renderBits()}
             </div>
-            {showTooltip && (
-                <div className="selection-tooltip" onClick={handleAddClick}>
-                    Add this bitfield
-                </div>
-            )}
         </div>
     );
 };
