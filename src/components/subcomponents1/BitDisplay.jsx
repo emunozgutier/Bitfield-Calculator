@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useBitfield } from '../context/BitContext';
+import { useBitfield } from '../../context/BitContext';
 import './BitDisplay.css';
 
 const BitDisplay = () => {

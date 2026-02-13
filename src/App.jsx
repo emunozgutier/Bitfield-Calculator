@@ -1,7 +1,7 @@
+
 import { BitfieldProvider } from './context/BitContext';
-import BitDisplay from './components/BitDisplay';
-import ValueDisplay from './components/ValueDisplay';
-import Keypad from './components/Keypad';
+import Calculator from './components/Calculator';
+import Notes from './components/Notes';
 import './App.css';
 
 function App() {
@@ -9,11 +9,12 @@ function App() {
     <div className="app-container">
       <h1>Bitfield Calculator</h1>
       <BitfieldProvider>
-        <div className="calculator-layout">
-          <BitDisplay />
-          <div className="controls-area">
-            <ValueDisplay />
-            <Keypad />
+        <div className="main-layout">
+          <div className="calculator-column">
+            <Calculator />
+          </div>
+          <div className="notes-column">
+            <Notes />
           </div>
         </div>
       </BitfieldProvider>

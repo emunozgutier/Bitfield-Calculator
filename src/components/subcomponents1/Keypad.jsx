@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useBitfield } from '../context/BitContext';
+import { useBitfield } from '../../context/BitContext';
 import './Keypad.css';
 
 const Keypad = () => {

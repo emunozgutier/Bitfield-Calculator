@@ -1,0 +1,120 @@
+.created-bitfields-container {
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.created-bitfields-container h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #e0e0e0;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.add-field-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    background-color: #333;
+    padding: 0.75rem;
+    border-radius: 4px;
+}
+
+.add-field-form input {
+    background-color: #444;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.add-field-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-field-form button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    color: #aaa;
+}
+
+.selection-preview {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-align: center;
+}
+
+.fields-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bitfield-item {
+    background-color: #333;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border-left: 3px solid #28a745;
+}
+
+.bitfield-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.bitfield-name {
+    font-weight: bold;
+    color: #fff;
+}
+
+.bitfield-range {
+    color: #aaa;
+    font-size: 0.85rem;
+    font-family: monospace;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 0.25rem;
+}
+
+.delete-btn:hover {
+    color: #ff4d4d;
+}
+
+.bitfield-values {
+    display: flex;
+    justify-content: space-between;
+    background-color: #222;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.bitfield-values .hex {
+    color: #00d4ff;
+}
+
+.bitfield-values .dec {
+    color: #ff9f00;
+}
