@@ -1,13 +1,28 @@
+/* Main wrapper for relative positioning of tooltip */
+.bit-display-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 .bit-display-container {
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    /* 16 bits per row -> 4 rows for 64 bits */
-    gap: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    /* Gap between groups */
     padding: 20px;
     background: #1a1a1a;
     border-radius: 8px;
     user-select: none;
     margin-bottom: 20px;
+    justify-content: center;
+}
+
+.bit-group {
+    display: flex;
+    gap: 2px;
+    background: #252525;
+    padding: 4px;
+    border-radius: 6px;
 }
 
 .bit {
@@ -15,7 +30,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 4px;
+    width: 32px;
+    height: 48px;
     background: #333;
     border-radius: 4px;
     cursor: pointer;
@@ -25,6 +41,7 @@
 
 .bit:hover {
     background: #444;
+    transform: translateY(-2px);
 }
 
 .bit.on {
@@ -32,6 +49,7 @@
     /* Green for ON */
     color: white;
     text-shadow: 0 0 5px rgba(46, 125, 50, 0.8);
+    box-shadow: 0 0 10px rgba(46, 125, 50, 0.4);
 }
 
 .bit.selected {
@@ -39,6 +57,7 @@
     /* Gold highlight */
     box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     background: #555;
+    z-index: 1;
 }
 
 .bit.on.selected {
@@ -47,7 +66,7 @@
 }
 
 .bit-index {
-    font-size: 0.7em;
+    font-size: 0.6em;
     color: #888;
     margin-bottom: 2px;
 }
@@ -57,9 +76,65 @@
     font-size: 1.1em;
 }
 
+/* Tooltip Styling */
+.selection-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffd700;
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    animation: fadeIn 0.2s ease;
+    z-index: 10;
+}
+
+.selection-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #ffd700 transparent transparent transparent;
+}
+
+.selection-tooltip:hover {
+    background: #ffea00;
+    transform: translateX(-50%) scale(1.05);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 @media (max-width: 800px) {
     .bit-display-container {
-        grid-template-columns: repeat(8, 1fr);
-        /* 8 bits per row on smaller screens */
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .bit-group {
+        padding: 2px;
+    }
+
+    .bit {
+        width: 24px;
+        height: 36px;
     }
 }

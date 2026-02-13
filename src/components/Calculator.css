@@ -1,8 +1,4 @@
-.calculator-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+/* .calculator-container replaced by Bootstrap classes */
 
 .value-display-section {
     display: flex;

@@ -6,14 +6,18 @@ import './App.css';
 
 function App() {
   return (
-    <div className="app-container">
-      <h1>Bitfield Calculator</h1>
+    <div className="container-fluid h-100 d-flex flex-column p-0">
+      <header className="row flex-shrink-0 bg-dark text-white p-3 m-0 border-bottom border-secondary">
+        <div className="col">
+          <h1 className="h3 m-0">Bitfield Calculator</h1>
+        </div>
+      </header>
       <BitfieldProvider>
-        <div className="main-layout">
-          <div className="calculator-column">
+        <div className="row flex-grow-1 m-0 overflow-hidden">
+          <div className="col-md-6 col-lg-5 p-3 d-flex flex-column border-end border-secondary bg-dark">
             <Calculator />
           </div>
-          <div className="notes-column">
+          <div className="col-md-6 col-lg-7 p-3 h-100 overflow-auto bg-dark">
             <Notes />
           </div>
         </div>

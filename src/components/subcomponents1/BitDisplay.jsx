@@ -3,7 +3,7 @@ import { useBitfield } from '../../context/BitContext';
 import './BitDisplay.css';
 
 const BitDisplay = () => {
-    const { value, toggleBit, selection, setSelection } = useBitfield();
+    const { value, toggleBit, selection, setSelection, addSavedField } = useBitfield();
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState(null);
 
@@ -38,39 +38,89 @@ const BitDisplay = () => {
         }
     }
 
+    const handleAddBitfield = () => {
+        if (selection.start !== null && selection.end !== null) {
+            // Check if already exists? For now just add.
+            // Maybe prompt for name?
+            const name = `Field ${selection.start}-${selection.end}`;
+            // We can iterate to find if there is a saved field with same range...
+            // But context handles uniqueness by ID.
+            // Let's just add it.
+            // Ideally we'd ask for a name, but for now specific requirement is "Add this bitfield" tooltip/action.
+            // We can make the tooltip clickable or have a button in it.
+        }
+    };
+
+    // We need to group bits by 4.
+    // And render them.
+    // We can use a different layout strategy. Flex-wrap with margins?
+    // Or grid with specific gaps.
+
     const renderBits = () => {
-        const bits = [];
-        for (let i = 63; i >= 0; i--) {
-            const isSet = (value & (1n << BigInt(i))) !== 0n;
+        const groups = [];
+        // bitWidth from context?
+        const { bitWidth = 64 } = useBitfield();
 
-            let isSelected = false;
-            if (selection.start !== null && selection.end !== null) {
-                const high = Math.max(selection.start, selection.end);
-                const low = Math.min(selection.start, selection.end);
-                isSelected = i >= low && i <= high;
+        for (let i = bitWidth - 1; i >= 0; i -= 4) {
+            const groupBits = [];
+            for (let j = 0; j < 4; j++) {
+                const bitIndex = i - j;
+                if (bitIndex < 0) break;
+
+                const isSet = (value & (1n << BigInt(bitIndex))) !== 0n;
+                let isSelected = false;
+                if (selection.start !== null && selection.end !== null) {
+                    const high = Math.max(selection.start, selection.end);
+                    const low = Math.min(selection.start, selection.end);
+                    isSelected = bitIndex >= low && bitIndex <= high;
+                }
+
+                groupBits.push(
+                    <div
+                        key={bitIndex}
+                        className={`bit ${isSet ? 'on' : 'off'} ${isSelected ? 'selected' : ''}`}
+                        onMouseDown={() => handleMouseDown(bitIndex)}
+                        onMouseEnter={() => handleMouseEnter(bitIndex)}
+                        onMouseUp={handleMouseUp}
+                        title={`Bit ${bitIndex}`}
+                    >
+                        <div className="bit-index">{bitIndex}</div>
+                        <div className="bit-value">{isSet ? 1 : 0}</div>
+                    </div>
+                );
             }
-
-            bits.push(
-                <div
-                    key={i}
-                    className={`bit ${isSet ? 'on' : 'off'} ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleBitClick(i)}
-                    onMouseDown={() => handleMouseDown(i)}
-                    onMouseEnter={() => handleMouseEnter(i)}
-                    onMouseUp={handleMouseUp}
-                    title={`Bit ${i}`}
-                >
-                    <div className="bit-index">{i}</div>
-                    <div className="bit-value">{isSet ? 1 : 0}</div>
+            groups.push(
+                <div key={`group-${i}`} className="bit-group">
+                    {groupBits}
                 </div>
             );
         }
-        return bits;
+        return groups;
     };
 
+    const handleAddClick = (e) => {
+        e.stopPropagation();
+        if (selection.start !== null && selection.end !== null) {
+            const high = Math.max(selection.start, selection.end);
+            const low = Math.min(selection.start, selection.end);
+            addSavedField(`Field ${high}:${low}`, high, low);
+            // Clear selection? Maybe not.
+            setSelection({ start: null, end: null });
+        }
+    };
+
+    const showTooltip = selection.start !== null && selection.end !== null && !isDragging;
+
     return (
-        <div className="bit-display-container" onMouseLeave={handleMouseUp}>
-            {renderBits()}
+        <div className="bit-display-wrapper" onMouseLeave={handleMouseUp}>
+            <div className="bit-display-container">
+                {renderBits()}
+            </div>
+            {showTooltip && (
+                <div className="selection-tooltip" onClick={handleAddClick}>
+                    Add this bitfield
+                </div>
+            )}
         </div>
     );
 };

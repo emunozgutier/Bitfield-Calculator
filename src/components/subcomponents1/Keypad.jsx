@@ -3,7 +3,7 @@ import { useBitfield } from '../../context/BitContext';
 import './Keypad.css';
 
 const Keypad = () => {
-    const { selection, updateRange, setValue } = useBitfield();
+    const { selection, setValue } = useBitfield();
     const [input, setInput] = useState('');
 
     // Define executeCommand first or inside useCallback?
@@ -50,21 +50,16 @@ const Keypad = () => {
                 }
             }
 
-            if (selection.start !== null && selection.end !== null) {
-                updateRange(val);
-                setInput('');
-            } else {
-                // Set whole value?
-                setValue(val);
-                setInput('');
-            }
+            // Always set whole value as per request
+            setValue(val);
+            setInput('');
 
         } catch (e) {
             console.error("Invalid input", e);
             // Shake effect or error state?
             // For now just ignore
         }
-    }, [input, selection, updateRange, setValue]);
+    }, [input, setValue]);
 
     const handlePress = useCallback((key) => {
         if (key === 'CLEAR') {

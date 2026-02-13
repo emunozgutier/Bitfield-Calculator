@@ -8,31 +8,24 @@ export const useBitfield = () => useContext(BitfieldContext);
 
 export const BitfieldProvider = ({ children }) => {
     const [value, setValue] = useState(0n);
+    const [bitWidth, setBitWidth] = useState(64);
     const [selection, setSelection] = useState({ start: null, end: null });
     const [isSelecting, setIsSelecting] = useState(false);
-    const [history, setHistory] = useState([]);
     const [savedFields, setSavedFields] = useState([]);
 
     // Actions
     const toggleBit = (index) => {
+        if (index >= bitWidth) return;
         setValue((prev) => {
-            const newValue = BitMath.toggleBit(prev, index);
-            addToHistory(newValue, `Toggle Bit ${index}`);
-            return newValue;
+            return BitMath.toggleBit(prev, index);
         });
     };
 
     const updateRange = (newVal) => {
         if (selection.start === null || selection.end === null) return;
         setValue((prev) => {
-            const newValue = BitMath.setRange(prev, selection.start, selection.end, newVal);
-            addToHistory(newValue, `Update Range [${Math.max(selection.start, selection.end)}:${Math.min(selection.start, selection.end)}]`);
-            return newValue;
+            return BitMath.setRange(prev, selection.start, selection.end, newVal);
         });
-    };
-
-    const addToHistory = (val, operation) => {
-        setHistory((prev) => [{ timestamp: Date.now(), value: val, operation }, ...prev].slice(0, 50));
     };
 
     const addSavedField = (name, start, end) => {
@@ -43,9 +36,16 @@ export const BitfieldProvider = ({ children }) => {
         setSavedFields((prev) => prev.filter((field) => field.id !== id));
     };
 
-    const setBitfieldValue = (val, operation = "Manual Set") => {
-        setValue(val);
-        addToHistory(val, operation);
+    const setBitfieldValue = (val) => {
+        // Mask value to bitWidth
+        let mask = (1n << BigInt(bitWidth)) - 1n;
+        setValue(val & mask);
+    }
+
+    const setWidth = (width) => {
+        setBitWidth(width);
+        // Trim value if needed
+        setValue(prev => prev & ((1n << BigInt(width)) - 1n));
     }
 
     return (
@@ -53,13 +53,14 @@ export const BitfieldProvider = ({ children }) => {
             value={{
                 value,
                 setValue: setBitfieldValue,
+                bitWidth,
+                setBitWidth: setWidth,
                 selection,
                 setSelection,
                 isSelecting,
                 setIsSelecting,
                 toggleBit,
                 updateRange,
-                history,
                 savedFields,
                 addSavedField,
                 removeSavedField
