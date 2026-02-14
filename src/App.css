@@ -1,1 +1,11 @@
-/* Styles moved to Bootstrap classes in App.jsx */
+@media (min-width: 768px) {
+    .col-custom-70 {
+        flex: 0 0 70%;
+        max-width: 70%;
+    }
+
+    .col-custom-30 {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+}

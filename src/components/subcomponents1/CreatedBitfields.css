@@ -15,58 +15,6 @@
     padding-bottom: 0.5rem;
 }
 
-.add-field-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    background-color: #333;
-    padding: 0.75rem;
-    border-radius: 4px;
-}
-
-.add-field-form input {
-    background-color: #444;
-    border: 1px solid #555;
-    color: #fff;
-    padding: 0.5rem;
-    border-radius: 4px;
-}
-
-.add-field-form button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.add-field-form button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-    color: #aaa;
-}
-
-.add-field-form button.btn-highlight {
-    background-color: #28a745;
-    box-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
-    transform: scale(1.02);
-    transition: all 0.2s ease;
-}
-
-.add-field-form button.btn-highlight:hover {
-    background-color: #218838;
-    box-shadow: 0 0 12px rgba(40, 167, 69, 0.8);
-}
-
-.selection-preview {
-    font-size: 0.8rem;
-    color: #aaa;
-    text-align: center;
-}
-
 .fields-list {
     flex: 1;
     overflow-y: auto;
@@ -77,27 +25,80 @@
 
 .bitfield-item {
     background-color: #333;
-    padding: 0.75rem;
+    padding: 0.5rem;
     border-radius: 4px;
     border-left: 3px solid #28a745;
-}
-
-.bitfield-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    gap: 1rem;
+    justify-content: space-between;
 }
 
 .bitfield-name {
     font-weight: bold;
     color: #fff;
+    width: 20%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.bitfield-range {
+.bitfield-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.control-group label {
+    font-size: 0.7rem;
     color: #aaa;
-    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.control-inputs {
+    display: flex;
+    align-items: center;
+    background-color: #222;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.control-inputs span {
+    width: 2ch;
+    text-align: center;
+    color: #fff;
     font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.control-inputs button {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-inputs button:hover {
+    color: #fff;
+    background-color: #444;
+    border-radius: 2px;
+}
+
+.bitfield-value {
+    flex: 1;
+    min-width: 150px;
 }
 
 .delete-btn {
@@ -108,25 +109,27 @@
     cursor: pointer;
     line-height: 1;
     padding: 0 0.25rem;
+    margin-left: auto;
 }
 
 .delete-btn:hover {
     color: #ff4d4d;
 }
 
-.bitfield-values {
-    display: flex;
-    justify-content: space-between;
-    background-color: #222;
-    padding: 0.5rem;
-    border-radius: 4px;
-    font-family: monospace;
+/* Scrollbar styling for the list */
+.fields-list::-webkit-scrollbar {
+    width: 6px;
 }
 
-.bitfield-values .hex {
-    color: #00d4ff;
+.fields-list::-webkit-scrollbar-track {
+    background: #2a2a2a;
 }
 
-.bitfield-values .dec {
-    color: #ff9f00;
+.fields-list::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+.fields-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

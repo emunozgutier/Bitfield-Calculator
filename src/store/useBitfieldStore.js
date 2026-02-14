@@ -49,4 +49,10 @@ export const useBitfieldStore = create((set) => ({
     removeSavedField: (id) => set((state) => ({
         savedFields: state.savedFields.filter((field) => field.id !== id)
     })),
+
+    updateSavedField: (id, updates) => set((state) => ({
+        savedFields: state.savedFields.map((field) =>
+            field.id === id ? { ...field, ...updates } : field
+        )
+    })),
 }));

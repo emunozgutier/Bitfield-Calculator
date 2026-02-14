@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useBitfieldStore } from '../store/useBitfieldStore';
+import Display from './subcomponents1/Display';
 import BitDisplay from './subcomponents1/BitDisplay';
 import Keypad from './subcomponents1/Keypad';
 import './Calculator.css';
 
 const Calculator = () => {
-    const { bitWidth, setBitWidth, selection, addSavedField } = useBitfieldStore();
+    const { bitWidth, setBitWidth, selection, addSavedField, value } = useBitfieldStore();
     const [fieldName, setFieldName] = useState('');
 
     const handleSave = () => {
@@ -41,6 +42,9 @@ const Calculator = () => {
                             </button>
                         ))}
                     </div>
+                </div>
+                <div className="bg-dark p-2 border-bottom border-secondary">
+                    <Display value={value} bitWidth={bitWidth} type="main" />
                 </div>
                 <div className="card-body p-2 overflow-auto">
                     <BitDisplay />
